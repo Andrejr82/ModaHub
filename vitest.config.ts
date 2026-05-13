@@ -5,6 +5,9 @@ const root = fileURLToPath(new URL("./", import.meta.url));
 
 export default defineConfig({
   root,
+  esbuild: {
+    jsx: "automatic",
+  },
   test: {
     dir: "tests",
     environment: "jsdom",

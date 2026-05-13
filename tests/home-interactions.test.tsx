@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import Home from "@/app/page";
 import { CART_STORAGE_KEY, WISHLIST_STORAGE_KEY } from "@/lib/storage";
@@ -15,8 +15,9 @@ describe("home commerce interactions", () => {
     });
 
     fireEvent.click(await screen.findByRole("button", { name: /abrir carrinho com 1 itens/i }));
-    expect(screen.getByRole("dialog", { name: /seu carrinho/i })).toBeInTheDocument();
-    expect(screen.getByText("Blazer Linho Estruturado")).toBeInTheDocument();
+    const cartDialog = screen.getByRole("dialog", { name: /seu carrinho/i });
+    expect(cartDialog).toBeInTheDocument();
+    expect(within(cartDialog).getByText("Blazer Linho Estruturado")).toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText(/quantidade/i), { target: { value: "2" } });
     await waitFor(() => {

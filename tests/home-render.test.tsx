@@ -8,7 +8,7 @@ describe("home page", () => {
     expect(screen.getByLabelText("ModaHub página inicial")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /Moda premium para todos os seus momentos/i })).toBeInTheDocument();
     expect(screen.getByText("Categorias em destaque")).toBeInTheDocument();
-    expect(screen.getByText("Mais vendidos")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Mais vendidos" })).toBeInTheDocument();
     expect(screen.getByText("Novidades da semana")).toBeInTheDocument();
     expect(screen.getByText("Encontre sua próxima peça")).toBeInTheDocument();
     expect(screen.getByText("Escolha por ocasião")).toBeInTheDocument();

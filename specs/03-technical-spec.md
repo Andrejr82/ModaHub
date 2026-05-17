@@ -25,8 +25,8 @@ Next.js App Router, React, TypeScript estrito, Tailwind CSS, ESLint, Vitest, Tes
 - Estado de filtros pode ser local na Home, com lógica pura em `/lib`.
 
 ## Utils
-- `formatCurrency` para BRL.
-- `filterProducts`, `searchProducts`, `sortProducts`, `getVisibleProducts`.
+- `formatCurrency`, `calculateDiscountPercentage`, `calculateInstallmentValue`, `getStockLabel` e `getFreeShippingProgress` para apresentação comercial.
+- `filterProducts`, `searchProducts`, `sortProducts`, `getVisibleProducts` e categorias derivadas via flags/tags comerciais.
 - `calculateCartSubtotal`, `addCartItem`, `updateCartItemQuantity`, `removeCartItem`.
 
 ## Performance
@@ -34,6 +34,11 @@ Next.js App Router, React, TypeScript estrito, Tailwind CSS, ESLint, Vitest, Tes
 - Sem dependências desnecessárias.
 - Imagens não são requisito para funcionamento; cards usam gradientes estáveis.
 - Evitar reprocessamento excessivo com funções puras e `useMemo` onde fizer sentido.
+
+## Categorias comerciais derivadas
+- `Promoções` deve considerar produtos com desconto ou tag promocional.
+- `Nova Coleção` deve considerar `isNew`, `isLaunch`, categoria direta ou tag de nova coleção.
+- `Kits/Conjuntos` deve considerar categoria direta ou tags de kit/conjunto.
 
 ## Restrições técnicas
 - Não implementar backend real.

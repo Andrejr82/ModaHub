@@ -1,26 +1,10 @@
-# 04 — Data Contract
-
-## Tipos TypeScript
-Os contratos oficiais vivem em `/types/product.ts`.
+# Data Contract
 
 ## Product
-Campos obrigatórios: `id`, `name`, `brand`, `category`, `subcategory`, `description`, `price`, `rating`, `reviewCount`, `sizes`, `colors`, `tags`, `image`, `isNew`, `isBestSeller`, `hasDiscount`, `stock`, `releaseDate`, `salesCount` e `palette`. `oldPrice` é opcional, mas obrigatório quando `hasDiscount` for verdadeiro.
+Cada produto fictício contém: id, name, brand, category, subcategory, description, price, oldPrice opcional, rating, reviewCount, sizes, colors, tags, image, imageAlt, isNew, isBestSeller, hasDiscount, stock, releaseDate, salesCount, palette, freeShipping, installments, collection, isFeatured e isLaunch.
 
-## Category
-Categoria possui `id`, `name`, `description` e `accent`.
+## Categorias
+Nova Coleção, Promoções, Kits/Conjuntos, Camisas, Bermudas, Calças, Calçados, Bonés e Acessórios.
 
-## Brand
-Marca possui `id`, `name`, `description` e `featured`.
-
-## CartItem
-Carrinho armazena `productId`, `quantity` e snapshot mínimo `product` para renderização/subtotal.
-
-## FilterState
-Filtros: `query`, `categories`, `brands`, `priceRange`, `discountOnly`, `minRating`, `sizes`, `newOnly`, `bestSellerOnly`.
-
-## Dados mockados obrigatórios
-- Pelo menos 16 produtos.
-- Pelo menos um produto novo.
-- Pelo menos um best-seller.
-- Pelo menos um produto com desconto.
-- Produtos distribuídos entre feminino, masculino, unissex, calçados, bolsas, relógios, óculos e acessórios.
+## Carrinho
+CartItem contém productId, quantity, product e selectedSize opcional. O checkout é fictício: cupom, CEP, frete e parcelamento são simulações locais sem backend ou pagamento real.

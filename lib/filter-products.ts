@@ -1,4 +1,4 @@
-import type { FilterState, Product, SortOption } from "@/types/product";
+import type { FilterState, Product, ProductCategory, SortOption } from "@/types/product";
 
 export const defaultFilterState: FilterState = {
   query: "",
@@ -26,9 +26,16 @@ export function searchProducts(products: Product[], query: string): Product[] {
   });
 }
 
+function productMatchesCategory(product: Product, category: ProductCategory): boolean {
+  if (category === "Promoções") return product.hasDiscount || product.tags.includes("promoções");
+  if (category === "Nova Coleção") return product.category === category || product.isNew || product.isLaunch || product.tags.includes("nova coleção");
+  if (category === "Kits/Conjuntos") return product.category === category || product.tags.includes("kit") || product.tags.includes("conjunto");
+  return product.category === category;
+}
+
 export function filterProducts(products: Product[], filters: FilterState): Product[] {
   return searchProducts(products, filters.query).filter((product) => {
-    const inCategory = filters.categories.length === 0 || filters.categories.includes(product.category);
+    const inCategory = filters.categories.length === 0 || filters.categories.some((category) => productMatchesCategory(product, category));
     const inBrand = filters.brands.length === 0 || filters.brands.includes(product.brand);
     const inPrice = product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1];
     const inDiscount = !filters.discountOnly || product.hasDiscount;

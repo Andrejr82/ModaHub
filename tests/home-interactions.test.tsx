@@ -8,23 +8,23 @@ describe("home commerce interactions", () => {
     window.localStorage.clear();
     render(<Home />);
 
-    fireEvent.click(screen.getAllByRole("button", { name: /adicionar ao carrinho/i })[0]);
+    fireEvent.click(screen.getAllByRole("button", { name: /comprar/i })[0]);
 
     await waitFor(() => {
       expect(window.localStorage.getItem(CART_STORAGE_KEY)).toContain("p1");
     });
 
-    fireEvent.click(await screen.findByRole("button", { name: /abrir carrinho com 1 itens/i }));
+    fireEvent.click((await screen.findAllByRole("button", { name: /abrir carrinho com 1 itens/i }))[0]);
     const cartDialog = screen.getByRole("dialog", { name: /seu carrinho/i });
     expect(cartDialog).toBeInTheDocument();
-    expect(within(cartDialog).getByText("Blazer Linho Estruturado")).toBeInTheDocument();
+    expect(within(cartDialog).getByText("Camisa Oversized Essential")).toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText(/quantidade/i), { target: { value: "2" } });
     await waitFor(() => {
       expect(window.localStorage.getItem(CART_STORAGE_KEY)).toContain('"quantity":2');
     });
 
-    fireEvent.click(screen.getByRole("button", { name: /remover blazer linho estruturado/i }));
+    fireEvent.click(screen.getByRole("button", { name: /remover camisa oversized essential/i }));
     await waitFor(() => {
       expect(screen.getByText("Seu carrinho está vazio")).toBeInTheDocument();
       expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe("[]");
@@ -35,12 +35,12 @@ describe("home commerce interactions", () => {
     window.localStorage.clear();
     render(<Home />);
 
-    const addButton = screen.getAllByRole("button", { name: /adicionar blazer linho estruturado à wishlist/i })[0];
+    const addButton = screen.getAllByRole("button", { name: /adicionar camisa oversized essential à wishlist/i })[0];
     expect(addButton).toHaveAttribute("aria-pressed", "false");
 
     fireEvent.click(addButton);
 
-    const removeButton = await screen.findAllByRole("button", { name: /remover blazer linho estruturado da wishlist/i });
+    const removeButton = await screen.findAllByRole("button", { name: /remover camisa oversized essential da wishlist/i });
     expect(removeButton[0]).toHaveAttribute("aria-pressed", "true");
     await waitFor(() => {
       expect(window.localStorage.getItem(WISHLIST_STORAGE_KEY)).toContain("p1");
@@ -49,7 +49,7 @@ describe("home commerce interactions", () => {
     fireEvent.click(removeButton[0]);
 
     await waitFor(() => {
-      expect(screen.getAllByRole("button", { name: /adicionar blazer linho estruturado à wishlist/i })[0]).toHaveAttribute("aria-pressed", "false");
+      expect(screen.getAllByRole("button", { name: /adicionar camisa oversized essential à wishlist/i })[0]).toHaveAttribute("aria-pressed", "false");
       expect(window.localStorage.getItem(WISHLIST_STORAGE_KEY)).toBe("[]");
     });
   });

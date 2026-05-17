@@ -3,7 +3,7 @@ import { products } from "@/data/products";
 import { defaultFilterState, filterProducts, getVisibleProducts, searchProducts, sortProducts } from "@/lib/filter-products";
 
 const requiredProductKeys = [
-  "id", "name", "brand", "category", "subcategory", "description", "price", "rating", "reviewCount", "sizes", "colors", "tags", "image", "isNew", "isBestSeller", "hasDiscount", "stock", "releaseDate", "salesCount",
+  "id", "name", "brand", "category", "subcategory", "description", "price", "rating", "reviewCount", "sizes", "colors", "tags", "image", "imageAlt", "isNew", "isBestSeller", "hasDiscount", "stock", "releaseDate", "salesCount", "freeShipping", "installments", "collection", "isFeatured", "isLaunch",
 ];
 
 describe("mock product data", () => {
@@ -23,10 +23,10 @@ describe("mock product data", () => {
 
 describe("search, filters and sorting", () => {
   it("searches by name, brand, category and tag", () => {
-    expect(searchProducts(products, "Blazer").map((product) => product.id)).toContain("p1");
-    expect(searchProducts(products, "Aurora Studio").every((product) => product.brand === "Aurora Studio")).toBe(true);
+    expect(searchProducts(products, "Oversized").map((product) => product.id)).toContain("p1");
+    expect(searchProducts(products, "Asfalto Studio").every((product) => product.brand === "Asfalto Studio")).toBe(true);
     expect(searchProducts(products, "Calçados").every((product) => product.category === "Calçados")).toBe(true);
-    expect(searchProducts(products, "viagem").length).toBeGreaterThan(0);
+    expect(searchProducts(products, "cargo").length).toBeGreaterThan(0);
   });
 
   it("returns empty results for missing searches", () => {
@@ -34,8 +34,10 @@ describe("search, filters and sorting", () => {
   });
 
   it("filters by category, brand, price, size and combined flags", () => {
-    expect(filterProducts(products, { ...defaultFilterState, categories: ["Bolsas"] }).every((product) => product.category === "Bolsas")).toBe(true);
-    expect(filterProducts(products, { ...defaultFilterState, brands: ["Vela & Co."] }).every((product) => product.brand === "Vela & Co.")).toBe(true);
+    expect(filterProducts(products, { ...defaultFilterState, categories: ["Bonés"] }).every((product) => product.category === "Bonés")).toBe(true);
+    expect(filterProducts(products, { ...defaultFilterState, categories: ["Promoções"] }).every((product) => product.hasDiscount)).toBe(true);
+    expect(filterProducts(products, { ...defaultFilterState, categories: ["Nova Coleção"] }).every((product) => product.isNew || product.isLaunch || product.category === "Nova Coleção")).toBe(true);
+    expect(filterProducts(products, { ...defaultFilterState, brands: ["Vanta Supply"] }).every((product) => product.brand === "Vanta Supply")).toBe(true);
     expect(filterProducts(products, { ...defaultFilterState, priceRange: [0, 150] }).every((product) => product.price <= 150)).toBe(true);
     expect(filterProducts(products, { ...defaultFilterState, sizes: ["Único"] }).every((product) => product.sizes.includes("Único"))).toBe(true);
 
@@ -57,7 +59,7 @@ describe("search, filters and sorting", () => {
   });
 
   it("combines search, filters and sorting", () => {
-    const result = getVisibleProducts(products, { ...defaultFilterState, query: "casual", priceRange: [0, 350], bestSellerOnly: true }, "price-asc");
+    const result = getVisibleProducts(products, { ...defaultFilterState, query: "cargo", priceRange: [0, 350], bestSellerOnly: true }, "price-asc");
     expect(result.length).toBeGreaterThan(0);
     expect(result.every((product) => product.price <= 350 && product.isBestSeller)).toBe(true);
   });

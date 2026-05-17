@@ -14,11 +14,12 @@ Executar sempre nesta ordem:
 A entrega só é aprovada quando os quatro comandos passam no mesmo estado de código.
 
 ## Arquivos do harness
-- `tests/product-filter.test.ts`: dados mockados, busca, filtros combináveis e ordenação.
+- `tests/product-filter.test.ts`: dados mockados, busca, filtros combináveis, categorias comerciais derivadas e ordenação.
 - `tests/cart-utils.test.ts`: helpers puros do carrinho, subtotal, quantidade e persistência em `localStorage`.
 - `tests/cart-drawer.test.tsx`: estado vazio do drawer, renderização de itens, controle de quantidade e remoção.
 - `tests/wishlist.test.ts`: persistência de wishlist em `localStorage` e estado vazio de storage.
-- `tests/home-render.test.tsx`: renderização da home, header, hero, seções obrigatórias e footer.
+- `tests/format.test.ts`: moeda, desconto, parcelamento, estoque e progresso de frete grátis.
+- `tests/home-render.test.tsx`: renderização da home, header, hero, menu responsivo e seções obrigatórias e footer.
 - `tests/home-interactions.test.tsx`: fluxo de adicionar/remover carrinho, alterar quantidade, favoritar/remover favorito e estado visual.
 
 ## Cenários obrigatórios por área
@@ -27,7 +28,7 @@ A entrega só é aprovada quando os quatro comandos passam no mesmo estado de c�
 - A home renderiza sem erro.
 - Header existe e expõe busca, wishlist e carrinho.
 - Hero existe com headline e CTAs.
-- Categorias, mais vendidos, novidades, catálogo, ocasião, editorial, marcas, benefícios, depoimentos, newsletter e footer existem.
+- Compra rápida, lançamentos, mais vendidos, promoções, kits, catálogo, benefícios, prova social, newsletter e footer existem.
 - O drawer de carrinho renderiza estado vazio quando não há itens.
 
 ### Dados

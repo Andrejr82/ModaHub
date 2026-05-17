@@ -1,13 +1,13 @@
 export type ProductCategory =
-  | "Feminino"
-  | "Masculino"
-  | "Unissex"
+  | "Nova Coleção"
+  | "Promoções"
+  | "Kits/Conjuntos"
+  | "Camisas"
+  | "Bermudas"
+  | "Calças"
   | "Calçados"
-  | "Bolsas"
-  | "Relógios"
-  | "Óculos"
-  | "Acessórios"
-  | "Sale";
+  | "Bonés"
+  | "Acessórios";
 
 export type SortOption = "relevance" | "price-asc" | "price-desc" | "best-sellers" | "newest" | "rating";
 
@@ -34,6 +34,11 @@ export interface Product {
   releaseDate: string;
   salesCount: number;
   palette: string;
+  freeShipping: boolean;
+  installments: number;
+  collection: string;
+  isFeatured: boolean;
+  isLaunch: boolean;
 }
 
 export interface Category {
@@ -54,6 +59,7 @@ export interface CartItem {
   productId: string;
   quantity: number;
   product: Product;
+  selectedSize?: string;
 }
 
 export interface FilterState {

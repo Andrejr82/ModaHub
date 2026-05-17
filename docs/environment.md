@@ -1,9 +1,11 @@
 # Ambiente e solução de problemas de instalação
 
 ## Objetivo
-Este projeto depende de pacotes npm públicos (`next`, `react`, `vitest`, Testing Library, ESLint e tipos). Para que o harness seja confiável, o ambiente precisa conseguir acessar o registry npm e gerar/usar `package-lock.json`.
+
+Este projeto depende de pacotes npm públicos (`next`, `react`, `vitest`, Testing Library, ESLint, Tailwind e tipos). Para que o harness seja confiável, o ambiente precisa conseguir acessar o registry npm e instalar dependências com npm.
 
 ## Instalação padrão
+
 Execute a partir da raiz do repositório:
 
 ```bash
@@ -14,12 +16,26 @@ npm run test
 npm run build
 ```
 
+Também é possível usar:
+
+```bash
+npm run verify
+```
+
+## Requisitos de runtime
+
+- Node.js `>=20.11.0`.
+- npm compatível com o `packageManager` declarado em `package.json`.
+- Acesso HTTPS ao registry npm público ou a um mirror interno equivalente.
+
 ## Requisitos de rede
-- O registry configurado do projeto é `https://registry.npmjs.org/`.
+
+- O registry esperado é `https://registry.npmjs.org/`.
 - Proxies corporativos precisam permitir `CONNECT`/HTTPS para `registry.npmjs.org`.
 - Se o ambiente definir `HTTP_PROXY`, `HTTPS_PROXY`, `npm_config_http_proxy` ou `npm_config_https_proxy`, esses proxies precisam permitir download de pacotes npm públicos, inclusive pacotes escopados como `@eslint/eslintrc`, `@testing-library/react` e `@types/node`.
 
 ## Diagnóstico rápido
+
 Use estes comandos quando `npm install` falhar:
 
 ```bash
@@ -29,10 +45,12 @@ curl -I https://registry.npmjs.org/@eslint%2feslintrc
 ```
 
 Resultados esperados:
+
 - `curl` deve retornar HTTP 200/304 ou redirecionamento válido, não `403 Forbidden`.
 - `npm config list` deve mostrar o registry público ou um mirror interno autorizado.
 
 ## Erro conhecido: `403 Forbidden` no registry
+
 Se o erro for semelhante a:
 
 ```text
@@ -48,4 +66,5 @@ isso indica bloqueio de rede/proxy antes da instalação das dependências. O c�
 Após resolver a rede, rode novamente `npm install` e depois o harness completo.
 
 ## Lockfile
-O arquivo `.npmrc` do projeto força `package-lock=true` para evitar que configurações globais do usuário desabilitem lockfiles. Sempre commite `package-lock.json` quando ele for gerado em um ambiente com acesso ao registry.
+
+O repositório possui `.npmrc` local com `package-lock=true` para evitar que configurações globais desabilitem lockfiles. Se `npm install` gerar ou atualizar `package-lock.json`, revise o diff e faça commit do lockfile junto com alterações reais de dependência. Não adicione ou remova dependências sem necessidade clara.

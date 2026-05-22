@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { AddToCartToast } from "@/components/AddToCartToast";
 import { Benefits } from "@/components/Benefits";
 import { CartDrawer } from "@/components/CartDrawer";
 import { Filters } from "@/components/Filters";
@@ -83,7 +82,6 @@ export function CatalogPageClient({ searchParams, products }: CatalogPageClientP
   const [filters, setFilters] = useState<FilterState>(initialState.filters);
   const [sort, setSort] = useState<SortOption>(initialState.sort);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [addedProductName, setAddedProductName] = useState<string | null>(null);
   const cart = useCart();
   const wishlist = useWishlist();
 
@@ -95,10 +93,8 @@ export function CatalogPageClient({ searchParams, products }: CatalogPageClientP
   const setQuery = (query: string) => setFilters((current) => ({ ...current, query }));
   const addItem = (product: Product, selectedSize?: string) => {
     cart.addItem(product, selectedSize);
-    setAddedProductName(product.name);
   };
   const openCart = () => {
-    setAddedProductName(null);
     setIsCartOpen(true);
   };
 
@@ -127,7 +123,6 @@ export function CatalogPageClient({ searchParams, products }: CatalogPageClientP
       <Benefits />
       <Footer />
       <CartDrawer isOpen={isCartOpen} items={cart.items} subtotal={cart.subtotal} onClose={() => setIsCartOpen(false)} onRemove={cart.removeItem} onUpdateQuantity={cart.updateQuantity} />
-      <AddToCartToast productName={addedProductName} onOpenCart={openCart} onDismiss={() => setAddedProductName(null)} />
     </main>
   );
 }

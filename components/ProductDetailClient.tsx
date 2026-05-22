@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { AddToCartToast } from "@/components/AddToCartToast";
 import { CartDrawer } from "@/components/CartDrawer";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -21,7 +20,6 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const wishlist = useWishlist();
   
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [addedProductName, setAddedProductName] = useState<string | null>(null);
   
   const hasSingleSize = product.sizes.length <= 1;
   const [selectedSize, setSelectedSize] = useState<string | undefined>(hasSingleSize ? (product.sizes[0] ?? "Único") : undefined);
@@ -35,11 +33,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
   const addItem = () => {
     cart.addItem(product, selectedSize);
-    setAddedProductName(product.name);
   };
   
   const openCart = () => {
-    setAddedProductName(null);
     setIsCartOpen(true);
   };
 
@@ -123,7 +119,6 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
       <Footer />
       <CartDrawer isOpen={isCartOpen} items={cart.items} subtotal={cart.subtotal} onClose={() => setIsCartOpen(false)} onRemove={cart.removeItem} onUpdateQuantity={cart.updateQuantity} />
-      <AddToCartToast productName={addedProductName} onOpenCart={openCart} onDismiss={() => setAddedProductName(null)} />
     </main>
   );
 }

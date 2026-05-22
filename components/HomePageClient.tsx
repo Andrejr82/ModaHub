@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { AddToCartToast } from "@/components/AddToCartToast";
 import { CartDrawer } from "@/components/CartDrawer";
 import { CategoryCard } from "@/components/CategoryCard";
 import { Footer } from "@/components/Footer";
@@ -22,7 +21,6 @@ interface HomePageClientProps {
 
 export function HomePageClient({ products, categories }: HomePageClientProps) {
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [addedProductName, setAddedProductName] = useState<string | null>(null);
   const cart = useCart();
   const wishlist = useWishlist();
 
@@ -61,10 +59,8 @@ export function HomePageClient({ products, categories }: HomePageClientProps) {
 
   const addItem = (product: Product, selectedSize?: string) => {
     cart.addItem(product, selectedSize);
-    setAddedProductName(product.name);
   };
   const openCart = () => {
-    setAddedProductName(null);
     setIsCartOpen(true);
   };
 
@@ -95,7 +91,6 @@ export function HomePageClient({ products, categories }: HomePageClientProps) {
       <TrustCompact />
       <Footer />
       <CartDrawer isOpen={isCartOpen} items={cart.items} subtotal={cart.subtotal} onClose={() => setIsCartOpen(false)} onRemove={cart.removeItem} onUpdateQuantity={cart.updateQuantity} />
-      <AddToCartToast productName={addedProductName} onOpenCart={openCart} onDismiss={() => setAddedProductName(null)} />
     </main>
   );
 }

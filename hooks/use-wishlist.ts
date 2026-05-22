@@ -1,20 +1,29 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { readWishlistStorage, writeWishlistStorage } from "@/lib/storage";
+import { useMemo, useSyncExternalStore } from "react";
+import { readWishlistStorage, subscribeStorageKey, WISHLIST_STORAGE_KEY, writeWishlistStorage } from "@/lib/storage";
+
+const EMPTY_WISHLIST: string[] = [];
+let lastWishlistRaw: string | null | undefined;
+let lastWishlistSnapshot: string[] = EMPTY_WISHLIST;
+
+function getWishlistSnapshot(): string[] {
+  if (typeof window === "undefined") return EMPTY_WISHLIST;
+
+  const raw = window.localStorage.getItem(WISHLIST_STORAGE_KEY);
+  if (raw === lastWishlistRaw) return lastWishlistSnapshot;
+
+  lastWishlistRaw = raw;
+  lastWishlistSnapshot = raw ? readWishlistStorage(window.localStorage) : EMPTY_WISHLIST;
+  return lastWishlistSnapshot;
+}
 
 export function useWishlist() {
-  const [ids, setIds] = useState<string[]>([]);
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  useEffect(() => {
-    setIds(readWishlistStorage(window.localStorage));
-    setIsHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (isHydrated) writeWishlistStorage(window.localStorage, ids);
-  }, [ids, isHydrated]);
+  const ids = useSyncExternalStore(
+    (onStoreChange) => subscribeStorageKey(WISHLIST_STORAGE_KEY, onStoreChange),
+    getWishlistSnapshot,
+    () => EMPTY_WISHLIST,
+  );
 
   const wishlistSet = useMemo(() => new Set(ids), [ids]);
 
@@ -23,7 +32,11 @@ export function useWishlist() {
     count: ids.length,
     isFavorite: (productId: string) => wishlistSet.has(productId),
     toggleFavorite: (productId: string) =>
-      setIds((current) => (current.includes(productId) ? current.filter((id) => id !== productId) : [...current, productId])),
-    removeFavorite: (productId: string) => setIds((current) => current.filter((id) => id !== productId)),
+      writeWishlistStorage(
+        window.localStorage,
+        ids.includes(productId) ? ids.filter((id) => id !== productId) : [...ids, productId],
+      ),
+    removeFavorite: (productId: string) =>
+      writeWishlistStorage(window.localStorage, ids.filter((id) => id !== productId)),
   };
 }

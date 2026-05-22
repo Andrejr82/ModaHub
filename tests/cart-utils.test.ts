@@ -7,16 +7,16 @@ describe("cart utils", () => {
   it("adds, updates, removes and calculates subtotal", () => {
     const first = products[0];
     const second = products[1];
-    let cart = addCartItem([], first);
-    cart = addCartItem(cart, first);
+    let cart = addCartItem([], first, 1, "P");
+    cart = addCartItem(cart, first, 1, "P");
     cart = addCartItem(cart, second);
 
     expect(cart).toHaveLength(2);
-    expect(cart.find((item) => item.productId === first.id)?.quantity).toBe(2);
+    expect(cart.find((item) => item.productId === first.id && item.selectedSize === "P")?.quantity).toBe(2);
     expect(calculateCartSubtotal(cart)).toBeCloseTo(first.price * 2 + second.price);
 
-    cart = updateCartItemQuantity(cart, first.id, 3);
-    expect(cart.find((item) => item.productId === first.id)?.quantity).toBe(3);
+    cart = updateCartItemQuantity(cart, first.id, 3, "P");
+    expect(cart.find((item) => item.productId === first.id && item.selectedSize === "P")?.quantity).toBe(3);
 
     cart = removeCartItem(cart, second.id);
     expect(cart).toHaveLength(1);
@@ -24,8 +24,16 @@ describe("cart utils", () => {
   });
 
   it("removes item when quantity becomes zero", () => {
-    const cart = addCartItem([], products[0]);
-    expect(updateCartItemQuantity(cart, products[0].id, 0)).toEqual([]);
+    const cart = addCartItem([], products[0], 1, "P");
+    expect(updateCartItemQuantity(cart, products[0].id, 0, "P")).toEqual([]);
+  });
+
+  it("keeps the same product in separate cart lines when sizes differ", () => {
+    const item = products[0];
+    const cart = addCartItem(addCartItem([], item, 1, "P"), item, 1, "M");
+
+    expect(cart).toHaveLength(2);
+    expect(cart.map((entry) => entry.selectedSize)).toEqual(["P", "M"]);
   });
 
   it("persists and reads cart state from localStorage", () => {

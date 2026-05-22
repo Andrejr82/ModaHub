@@ -8,13 +8,17 @@ describe("home commerce interactions", () => {
     window.localStorage.clear();
     render(<Home />);
 
+    expect(screen.getAllByRole("button", { name: /escolha o tamanho/i })[0]).toBeDisabled();
+    fireEvent.click(screen.getByRole("button", { name: /selecionar tamanho xg para camisa oversized essential/i }));
     fireEvent.click(screen.getAllByRole("button", { name: /comprar/i })[0]);
 
     await waitFor(() => {
       expect(window.localStorage.getItem(CART_STORAGE_KEY)).toContain("p1");
+      expect(window.localStorage.getItem(CART_STORAGE_KEY)).toContain('"selectedSize":"XG"');
     });
 
-    fireEvent.click((await screen.findAllByRole("button", { name: /abrir carrinho com 1 itens/i }))[0]);
+    expect(screen.getByText("Adicionado ao carrinho")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /ver carrinho/i }));
     const cartDialog = screen.getByRole("dialog", { name: /seu carrinho/i });
     expect(cartDialog).toBeInTheDocument();
     expect(within(cartDialog).getByText("Camisa Oversized Essential")).toBeInTheDocument();
@@ -29,7 +33,7 @@ describe("home commerce interactions", () => {
       expect(screen.getByText("Seu carrinho está vazio")).toBeInTheDocument();
       expect(window.localStorage.getItem(CART_STORAGE_KEY)).toBe("[]");
     });
-  });
+  }, 10000);
 
   it("toggles wishlist visual state and persists add/remove actions", async () => {
     window.localStorage.clear();

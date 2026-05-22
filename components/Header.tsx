@@ -1,32 +1,43 @@
 "use client";
 
-import type { ChangeEvent } from "react";
+import Link from "next/link";
+import type { ChangeEvent, FormEvent } from "react";
 import { useState } from "react";
+import { useUser } from "@/hooks/use-user";
 
 interface HeaderProps {
   query: string;
   cartCount: number;
   wishlistCount: number;
-  onQueryChange: (query: string) => void;
-  onOpenCart: () => void;
+  onQueryChange?: (query: string) => void;
+  onOpenCart?: () => void;
 }
 
 const navItems = [
-  { label: "Nova Coleção", href: "#lancamentos" },
-  { label: "Promoções", href: "#promocoes" },
-  { label: "Kits/Conjuntos", href: "#kits" },
-  { label: "Camisas", href: "#catalogo" },
-  { label: "Bermudas", href: "#catalogo" },
-  { label: "Calças", href: "#catalogo" },
-  { label: "Calçados", href: "#catalogo" },
-  { label: "Bonés", href: "#catalogo" },
-  { label: "Acessórios", href: "#catalogo" },
+  { label: "Nova Coleção", href: "/catalogo?mode=launches" },
+  { label: "Promoções", href: "/catalogo?mode=sale" },
+  { label: "Kits/Conjuntos", href: "/catalogo?mode=kits" },
+  { label: "Mais Vendidos", href: "/catalogo?mode=best-sellers" },
+  { label: "Guia de Medidas", href: "/guia-de-medidas" },
+  { label: "Entrega e Trocas", href: "/entrega-e-trocas" },
+  { label: "Atendimento", href: "/atendimento" },
 ];
 
 export function Header({ query, cartCount, wishlistCount, onQueryChange, onOpenCart }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => onQueryChange(event.target.value);
+  const [draftQuery, setDraftQuery] = useState(query);
+  const { user } = useUser();
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setDraftQuery(event.target.value);
+    if (onQueryChange) onQueryChange(event.target.value);
+  };
   const closeMenu = () => setIsMenuOpen(false);
+  const handleSearchSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmedQuery = draftQuery.trim();
+    window.location.href = trimmedQuery ? `/catalogo?q=${encodeURIComponent(trimmedQuery)}` : "/catalogo";
+  };
 
   return (
     <>
@@ -36,9 +47,9 @@ export function Header({ query, cartCount, wishlistCount, onQueryChange, onOpenC
       <header className="sticky top-0 z-40 border-b border-neutral-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-4">
           <div className="flex items-center justify-between gap-3 lg:hidden">
-            <a href="#top" className="text-2xl font-black tracking-tight text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-clay" aria-label="ModaHub página inicial" onClick={closeMenu}>
+            <Link href="/" className="text-2xl font-black tracking-tight text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-clay" aria-label="ModaHub página inicial" onClick={closeMenu}>
               Moda<span className="text-clay">Hub</span>
-            </a>
+            </Link>
             <div className="flex items-center gap-2">
               <a href="https://wa.me/5500000000000" className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600" aria-label="Atendimento ModaHub pelo WhatsApp">WhatsApp</a>
               <button
@@ -54,13 +65,23 @@ export function Header({ query, cartCount, wishlistCount, onQueryChange, onOpenC
             </div>
           </div>
 
+
           <div className="hidden items-center justify-between gap-6 lg:flex">
-            <a href="#top" className="text-2xl font-black tracking-tight text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-clay" aria-label="ModaHub página inicial">
+            <Link href="/" className="text-2xl font-black tracking-tight text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-clay" aria-label="ModaHub página inicial">
               Moda<span className="text-clay">Hub</span>
-            </a>
-            <SearchBox id="site-search-desktop" query={query} onQueryChange={handleChange} className="w-96" />
+            </Link>
+            <SearchBox id="site-search-desktop" query={draftQuery} onQueryChange={handleChange} onSubmit={handleSearchSubmit} className="w-96" />
             <div className="flex items-center gap-2">
-              <a href="#catalogo" className="rounded-full border border-neutral-300 px-4 py-3 text-sm font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-clay" aria-label={`Wishlist com ${wishlistCount} itens`}>
+              {user ? (
+                <a href="/minha-conta" className="rounded-full border border-neutral-300 px-4 py-3 text-sm font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-clay">
+                  Minha Conta
+                </a>
+              ) : (
+                <a href="/login" className="rounded-full border border-neutral-300 px-4 py-3 text-sm font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-clay">
+                  Entrar
+                </a>
+              )}
+              <a href="/catalogo" className="rounded-full border border-neutral-300 px-4 py-3 text-sm font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-clay" aria-label={`Wishlist com ${wishlistCount} itens`}>
                 ♥ {wishlistCount}
               </a>
               <a href="https://wa.me/5500000000000" className="rounded-full border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-bold text-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600" aria-label="Atendimento ModaHub pelo WhatsApp">
@@ -73,12 +94,21 @@ export function Header({ query, cartCount, wishlistCount, onQueryChange, onOpenC
           </div>
 
           <div id="mobile-commerce-menu" className={`${isMenuOpen ? "grid" : "hidden"} gap-3 lg:hidden`}>
-            <SearchBox id="site-search-mobile" query={query} onQueryChange={handleChange} />
+            <SearchBox id="site-search-mobile" query={draftQuery} onQueryChange={handleChange} onSubmit={handleSearchSubmit} />
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3" aria-label="Ações rápidas">
-              <a href="#catalogo" onClick={closeMenu} className="rounded-full border border-neutral-300 px-3 py-3 text-center text-sm font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-clay" aria-label={`Wishlist com ${wishlistCount} itens`}>
+              {user ? (
+                <a href="/minha-conta" onClick={closeMenu} className="rounded-full border border-neutral-300 px-3 py-3 text-center text-sm font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-clay">
+                  Minha Conta
+                </a>
+              ) : (
+                <a href="/login" onClick={closeMenu} className="rounded-full border border-neutral-300 px-3 py-3 text-center text-sm font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-clay">
+                  Entrar
+                </a>
+              )}
+              <a href="/catalogo" onClick={closeMenu} className="rounded-full border border-neutral-300 px-3 py-3 text-center text-sm font-bold focus:outline-none focus-visible:ring-2 focus-visible:ring-clay" aria-label={`Wishlist com ${wishlistCount} itens`}>
                 ♥ Wishlist ({wishlistCount})
               </a>
-              <button type="button" onClick={() => { closeMenu(); onOpenCart(); }} className="rounded-full bg-ink px-3 py-3 text-sm font-bold text-white transition hover:bg-clay focus:outline-none focus-visible:ring-2 focus-visible:ring-clay sm:col-span-2" aria-label={`Abrir carrinho com ${cartCount} itens`}>
+              <button type="button" onClick={() => { closeMenu(); if (onOpenCart) onOpenCart(); }} className="rounded-full bg-ink px-3 py-3 text-sm font-bold text-white transition hover:bg-clay focus:outline-none focus-visible:ring-2 focus-visible:ring-clay sm:col-span-2" aria-label={`Abrir carrinho com ${cartCount} itens`}>
                 Carrinho ({cartCount})
               </button>
             </div>
@@ -97,9 +127,9 @@ export function Header({ query, cartCount, wishlistCount, onQueryChange, onOpenC
   );
 }
 
-function SearchBox({ id, query, onQueryChange, className = "" }: { id: string; query: string; onQueryChange: (event: ChangeEvent<HTMLInputElement>) => void; className?: string }) {
+function SearchBox({ id, query, onQueryChange, onSubmit, className = "" }: { id: string; query: string; onQueryChange: (event: ChangeEvent<HTMLInputElement>) => void; onSubmit: (event: FormEvent<HTMLFormElement>) => void; className?: string }) {
   return (
-    <div className={className}>
+    <form className={className} onSubmit={onSubmit}>
       <label className="sr-only" htmlFor={id}>Buscar produtos</label>
       <input
         id={id}
@@ -108,6 +138,6 @@ function SearchBox({ id, query, onQueryChange, className = "" }: { id: string; q
         placeholder="Buscar camisa, cargo, boné..."
         className="w-full rounded-full border border-neutral-300 px-4 py-3 text-sm outline-none transition focus:border-clay focus:ring-2 focus:ring-clay/20"
       />
-    </div>
+    </form>
   );
 }

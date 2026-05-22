@@ -6,7 +6,7 @@ ModaHub é uma aplicação demo de e-commerce de moda streetwear premium multima
 
 ## Visão geral do produto
 
-A home foi reposicionada para comunicar uma loja de streetwear premium multimarcas, priorizando:
+A home foi reposicionada para comunicar uma loja de streetwear premium multimarcas sem excesso de rolagem, priorizando:
 
 - nova coleção 2026;
 - promoções;
@@ -15,7 +15,7 @@ A home foi reposicionada para comunicar uma loja de streetwear premium multimarc
 - frete grátis acima de R$299;
 - primeira troca grátis;
 - atendimento via WhatsApp fictício;
-- catálogo com filtros;
+- prévia de catálogo na home e catálogo completo em `/catalogo`;
 - carrinho com cupom, CEP e frete mockados.
 
 ## Principais seções da home
@@ -24,16 +24,14 @@ A home foi reposicionada para comunicar uma loja de streetwear premium multimarc
 2. Header com logo, busca, wishlist, WhatsApp, carrinho e menu responsivo.
 3. Hero comercial da nova coleção.
 4. Blocos rápidos: Nova Coleção, Promoções e Kits/Conjuntos.
-5. Lançamentos.
-6. Destaques / Mais vendidos.
-7. Promoções até 50% off.
-8. Kits e conjuntos.
-9. Catálogo com filtros.
-10. Benefícios comerciais.
-11. Social proof / Instagram simulado.
-12. Newsletter.
-13. Footer completo.
-14. Cart Drawer.
+5. Curadoria com abas: Lançamentos, Mais vendidos, Sale e Kits.
+6. Complete o look.
+7. Prévia do catálogo.
+8. Confiança compacta, prova social e lista VIP.
+9. Footer completo.
+10. Cart Drawer.
+
+O catálogo completo vive em `/catalogo`, com busca, filtros, ordenação e grid completo.
 
 ## Funcionalidades
 
@@ -131,6 +129,7 @@ O harness cobre dados de produtos, busca, filtros, ordenação, utilitários com
 
 ## Documentação complementar
 
+- `docs/README.md` — índice da documentação operacional.
 - `specs/01-product-spec.md` — especificação do produto.
 - `specs/02-ux-ui-spec.md` — especificação de UX/UI.
 - `specs/03-technical-spec.md` — arquitetura técnica.
@@ -138,4 +137,5 @@ O harness cobre dados de produtos, busca, filtros, ordenação, utilitários com
 - `specs/05-acceptance-criteria.md` — critérios de aceite.
 - `specs/06-test-harness.md` — harness de validação.
 - `specs/07-implementation-audit.md` — auditoria da implementação atual.
+- `specs/README.md` — índice rápido das especificações.
 - `docs/environment.md` — instalação e troubleshooting de ambiente.

@@ -8,12 +8,18 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "build": "next build",
+    "audit:security": "npm audit --audit-level=high",
     "verify": "npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "dependencies": {
-    "next": "15.5.6",
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "^2.106.1",
+    "mercadopago": "^3.0.0",
+    "next": "16.2.6",
     "react": "19.1.0",
-    "react-dom": "19.1.0"
+    "react-dom": "19.1.0",
+    "recharts": "^3.8.1",
+    "stripe": "^22.1.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.1",
@@ -25,9 +31,9 @@
     "@types/react-dom": "19.1.7",
     "autoprefixer": "10.4.21",
     "eslint": "9.33.0",
-    "eslint-config-next": "15.5.6",
+    "eslint-config-next": "16.2.6",
     "jsdom": "26.1.0",
-    "postcss": "8.5.6",
+    "postcss": "8.5.14",
     "tailwindcss": "3.4.17",
     "typescript": "5.9.2",
     "vitest": "3.2.4"

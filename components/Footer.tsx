@@ -1,7 +1,22 @@
 export function Footer() {
-  const institutional = ["Quem Somos", "Como Comprar", "Como Chegar", "Atendimento"];
-  const help = ["Política de Privacidade", "Trocas e Devoluções", "Guia de Medidas", "Prazo de Entrega"];
-  const socials = ["Instagram", "Facebook", "YouTube", "TikTok"];
+  const institutional = [
+    { label: "Quem Somos", href: "/" },
+    { label: "Como Comprar", href: "/catalogo" },
+    { label: "Como Chegar", href: "/atendimento" },
+    { label: "Atendimento", href: "/atendimento" },
+  ];
+  const help = [
+    { label: "Política de Privacidade", href: "/atendimento" },
+    { label: "Trocas e Devoluções", href: "/entrega-e-trocas" },
+    { label: "Guia de Medidas", href: "/guia-de-medidas" },
+    { label: "Prazo de Entrega", href: "/entrega-e-trocas" },
+  ];
+  const socials = [
+    { label: "Instagram", href: "/" },
+    { label: "Facebook", href: "/" },
+    { label: "YouTube", href: "/" },
+    { label: "TikTok", href: "/" },
+  ];
 
   return (
     <footer className="bg-ink text-white">
@@ -39,13 +54,13 @@ export function Footer() {
   );
 }
 
-function FooterColumn({ title, items }: { title: string; items: string[] }) {
+function FooterColumn({ title, items }: { title: string; items: Array<{ label: string; href: string }> }) {
   return (
     <div>
       <h2 className="font-black">{title}</h2>
       <ul className="mt-4 space-y-3 text-sm text-white/70">
         {items.map((item) => (
-          <li key={item}><a href="#top" className="transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-clay">{item}</a></li>
+          <li key={item.label}><a href={item.href} className="transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-clay">{item.label}</a></li>
         ))}
       </ul>
     </div>

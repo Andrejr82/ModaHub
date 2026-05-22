@@ -1,3 +1,7 @@
+import Image from "next/image";
+import { ProductArtwork } from "@/components/ProductArtwork";
+import type { Product } from "@/types/product";
+
 const campaignBadges = [
   { title: "Até 50% off", text: "seleção limitada" },
   { title: "Frete grátis", text: "acima de R$299" },
@@ -5,12 +9,11 @@ const campaignBadges = [
   { title: "Últimas unidades", text: "estoque visível" },
 ];
 
-const heroProducts = [
-  { name: "Conjunto Moletom Oversized", meta: "3x sem juros • Frete grátis", badge: "-20%", palette: "from-zinc-950 to-stone-300", price: "R$ 399,90" },
-  { name: "Calça Cargo Street", meta: "Últimas unidades", badge: "Novo", palette: "from-olive-500 to-zinc-950", price: "R$ 289,90" },
-];
+export function Hero({ products }: { products: Product[] }) {
+  const heroProducts = ["p7", "p5"]
+    .map((productId) => products.find((product) => product.id === productId))
+    .filter((product): product is Product => Boolean(product));
 
-export function Hero() {
   return (
     <section id="top" className="mx-auto grid max-w-7xl gap-8 px-4 py-10 md:grid-cols-[1.05fr_0.95fr] md:py-16">
       <div className="flex flex-col justify-center">
@@ -20,8 +23,9 @@ export function Hero() {
           Camisas oversized, bermudas, conjuntos, calças cargo e acessórios para montar looks completos com estilo urbano.
         </p>
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <a href="#lancamentos" className="rounded-full bg-ink px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:bg-clay focus:outline-none focus-visible:ring-2 focus-visible:ring-clay">Comprar lançamentos</a>
-          <a href="#promocoes" className="rounded-full border border-ink px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-ink hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-clay">Ver promoções</a>
+          <a href="/catalogo?mode=launches" className="rounded-full bg-ink px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-white transition hover:bg-clay focus:outline-none focus-visible:ring-2 focus-visible:ring-clay">Comprar lançamentos</a>
+          <a href="/catalogo?mode=sale" className="rounded-full border border-ink px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:bg-ink hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-clay">Ver promoções</a>
+          <a href="/guia-de-medidas" className="rounded-full border border-neutral-300 bg-white px-7 py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-ink transition hover:border-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-clay">Guia de medidas</a>
         </div>
         <dl className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {campaignBadges.map((badge) => (
@@ -43,14 +47,22 @@ export function Hero() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {heroProducts.map((product, index) => (
-              <article key={product.name} className={`rounded-3xl p-5 shadow-soft ${index === 0 ? "bg-white" : "bg-champagne sm:translate-y-8"}`}>
+              <article key={product.id} className={`rounded-3xl p-5 shadow-soft ${index === 0 ? "bg-white" : "bg-champagne sm:translate-y-8"}`}>
                 <div className="flex items-center justify-between gap-3">
-                  <span className={`rounded-full px-3 py-1 text-xs font-bold uppercase text-white ${product.badge.startsWith("-") ? "bg-red-600" : "bg-emerald-600"}`}>{product.badge}</span>
-                  <span className="text-sm font-black text-ink">{product.price}</span>
+                  <span className={`rounded-full px-3 py-1 text-xs font-bold uppercase text-white ${product.oldPrice ? "bg-red-600" : "bg-emerald-600"}`}>
+                    {product.oldPrice ? `-${Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%` : "Novo"}
+                  </span>
+                  <span className="text-sm font-black text-ink">{`R$ ${product.price.toFixed(2).replace(".", ",")}`}</span>
                 </div>
-                <div className={`mt-4 h-36 rounded-2xl bg-gradient-to-br ${product.palette}`} aria-hidden />
+                {!product.image.startsWith("gradient://") ? (
+                  <div className="relative mt-4 h-36 w-full overflow-hidden rounded-2xl border border-neutral-200">
+                    <Image src={product.image} alt={product.imageAlt} fill className="object-cover" />
+                  </div>
+                ) : (
+                  <ProductArtwork product={product} className="mt-4 h-36 rounded-2xl border border-neutral-200" />
+                )}
                 <h2 className="mt-4 font-black text-ink">{product.name}</h2>
-                <p className="text-sm font-bold text-clay">{product.meta}</p>
+                <p className="text-sm font-bold text-clay">{product.freeShipping ? "Frete grátis" : "Seleção atual"}</p>
               </article>
             ))}
           </div>

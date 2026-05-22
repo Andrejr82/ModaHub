@@ -28,7 +28,7 @@ describe("CartDrawer", () => {
 
   it("renders cart items, quantity controls, subtotal and removal action", () => {
     const item = products[0];
-    const items = addCartItem([], item);
+    const items = addCartItem([], item, 1, "P");
     const onRemove = vi.fn();
     const onUpdateQuantity = vi.fn();
 
@@ -47,9 +47,9 @@ describe("CartDrawer", () => {
     expect(screen.getByText("Subtotal")).toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText(/quantidade/i), { target: { value: "2" } });
-    expect(onUpdateQuantity).toHaveBeenCalledWith(item.id, 2);
+    expect(onUpdateQuantity).toHaveBeenCalledWith(item.id, 2, "P");
 
     fireEvent.click(screen.getByRole("button", { name: `Remover ${item.name}` }));
-    expect(onRemove).toHaveBeenCalledWith(item.id);
+    expect(onRemove).toHaveBeenCalledWith(item.id, "P");
   });
 });

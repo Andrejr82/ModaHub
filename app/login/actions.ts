@@ -2,8 +2,14 @@
 
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { headers } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
 import { cleanCPF, isValidCPF } from '@/utils/cpf'
+import {
+  buildPasswordResetRedirectTo,
+  buildQueryRedirect,
+  getRequestOrigin,
+} from '@/lib/auth-urls'
 
 export async function login(formData: FormData) {
   const email = formData.get('email') as string
@@ -60,21 +66,36 @@ export async function logout() {
 }
 
 export async function resetPassword(formData: FormData) {
-  const email = formData.get('email') as string
+  const email = String(formData.get('email') ?? '').trim().toLowerCase()
   const supabase = await createClient()
 
-  // Precisamos do request origin para construir o redirectTo
-  const origin = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  if (!email) {
+    redirect(buildQueryRedirect('/esqueci-senha', 'error', 'Informe o e-mail cadastrado'))
+  }
+
+  const origin = getRequestOrigin(await headers())
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/auth/callback?next=/atualizar-senha`,
+    redirectTo: buildPasswordResetRedirectTo(origin),
   })
 
   if (error) {
-    redirect(`/esqueci-senha?error=Erro ao enviar e-mail: ${error.message}`)
+    redirect(
+      buildQueryRedirect(
+        '/esqueci-senha',
+        'error',
+        `Erro ao enviar e-mail: ${error.message}`,
+      ),
+    )
   }
 
-  redirect('/esqueci-senha?message=Um e-mail de recuperação foi enviado para você.')
+  redirect(
+    buildQueryRedirect(
+      '/esqueci-senha',
+      'message',
+      'Se o e-mail estiver cadastrado, enviaremos um link de recuperação em alguns minutos.',
+    ),
+  )
 }
 
 export async function updatePassword(formData: FormData) {
@@ -86,7 +107,13 @@ export async function updatePassword(formData: FormData) {
   })
 
   if (error) {
-    redirect(`/atualizar-senha?error=Erro ao atualizar senha: ${error.message}`)
+    redirect(
+      buildQueryRedirect(
+        '/atualizar-senha',
+        'error',
+        `Erro ao atualizar senha: ${error.message}`,
+      ),
+    )
   }
 
   redirect('/minha-conta')

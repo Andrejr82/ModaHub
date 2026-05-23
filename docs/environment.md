@@ -27,6 +27,24 @@ npm run verify
 - Node.js `>=20.11.0`.
 - npm compatível com o `packageManager` declarado em `package.json`.
 - Acesso HTTPS ao registry npm público ou a um mirror interno equivalente.
+- `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` configurados.
+- Em produção, defina `NEXT_PUBLIC_SITE_URL` com a origem pública do site, por exemplo `https://sua-loja.com`. Essa mesma origem precisa estar liberada no Supabase Auth em **URL Configuration > Redirect URLs**, incluindo o callback `/auth/callback`.
+
+## Recuperação de senha
+
+O fluxo usa `supabase.auth.resetPasswordForEmail` e redireciona o usuário pelo callback:
+
+```text
+{NEXT_PUBLIC_SITE_URL}/auth/callback?next=/atualizar-senha
+```
+
+Se `NEXT_PUBLIC_SITE_URL` não estiver definido, a aplicação tenta montar a origem a partir dos headers da requisição. Em deploys com proxy/CDN, mantenha `NEXT_PUBLIC_SITE_URL` definido para evitar links com domínio incorreto. Se a aplicação mostrar sucesso mas o e-mail não chegar, confira também:
+
+- se o e-mail digitado existe no Supabase Auth;
+- spam, promoções e bloqueios do provedor de e-mail;
+- limites/rate limit do e-mail padrão do Supabase;
+- configuração SMTP do Supabase para produção;
+- Redirect URLs permitidas no painel do Supabase.
 
 ## Requisitos de rede
 

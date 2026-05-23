@@ -51,7 +51,15 @@ export function Header({ query, cartCount, wishlistCount, onQueryChange, onOpenC
               Moda<span className="text-clay">Hub</span>
             </Link>
             <div className="flex items-center gap-2">
-              <a href="https://wa.me/5500000000000" className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600" aria-label="Atendimento ModaHub pelo WhatsApp">WhatsApp</a>
+              <a href="https://wa.me/5500000000000" className="hidden rounded-full border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 sm:inline-flex" aria-label="Atendimento ModaHub pelo WhatsApp">WhatsApp</a>
+              <button
+                type="button"
+                onClick={onOpenCart}
+                className="rounded-full bg-ink px-3 py-2 text-sm font-bold text-white transition hover:bg-clay focus:outline-none focus-visible:ring-2 focus-visible:ring-clay"
+                aria-label={`Abrir carrinho com ${cartCount} itens`}
+              >
+                Carrinho ({cartCount})
+              </button>
               <button
                 type="button"
                 className="rounded-full border border-neutral-300 px-4 py-2 text-sm font-bold text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-clay"

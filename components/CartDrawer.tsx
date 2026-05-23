@@ -60,8 +60,8 @@ export function CartDrawer({ isOpen, items, subtotal, onClose, onRemove, onUpdat
   return (
     <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-labelledby="cart-title">
       <button type="button" className="absolute inset-0 bg-ink/45" aria-label="Fechar carrinho" onClick={onClose} />
-      <aside className="absolute right-0 top-0 flex h-full w-full max-w-lg flex-col bg-white shadow-soft">
-        <div className="flex items-center justify-between border-b border-neutral-200 p-5">
+      <aside className="absolute right-0 top-0 flex h-dvh max-h-dvh w-full max-w-lg flex-col overflow-hidden bg-white shadow-soft">
+        <div className="flex shrink-0 items-center justify-between border-b border-neutral-200 p-5">
           <div>
             <h2 id="cart-title" className="text-2xl font-black text-ink">Seu carrinho</h2>
             <p className="text-sm text-neutral-600">Compra demonstrativa, sem pagamento real.</p>
@@ -76,11 +76,11 @@ export function CartDrawer({ isOpen, items, subtotal, onClose, onRemove, onUpdat
             <button type="button" onClick={onClose} className="mt-6 rounded-full bg-ink px-6 py-3 text-sm font-bold uppercase tracking-[0.2em] text-white">Continuar comprando</button>
           </div>
         ) : (
-          <>
-            <div className="flex-1 space-y-4 overflow-y-auto p-5">
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            <div className="space-y-4 p-5">
               {items.map((item) => (
                 <article key={`${item.productId}-${item.selectedSize ?? "default"}`} className="rounded-2xl border border-neutral-200 p-4">
-                  <div className="grid grid-cols-[72px_1fr_auto] gap-3">
+                  <div className="grid grid-cols-[72px_1fr] gap-3 sm:grid-cols-[72px_1fr_auto]">
                     <div aria-label={item.product.imageAlt} role="img" className="relative h-20 w-20 overflow-hidden rounded-2xl border border-neutral-200">
                       {!item.product.image.startsWith("gradient://") ? (
                         <Image src={item.product.image} alt={item.product.imageAlt} fill className="object-cover" />
@@ -94,7 +94,7 @@ export function CartDrawer({ isOpen, items, subtotal, onClose, onRemove, onUpdat
                       <p className="mt-1 text-sm text-neutral-600">Tamanho: {item.selectedSize ?? item.product.sizes[0] ?? "Único"}</p>
                       <p className="text-sm font-bold text-ink">{formatCurrency(item.product.price)}</p>
                     </div>
-                    <button type="button" onClick={() => onRemove(item.productId, item.selectedSize)} className="h-fit text-sm font-semibold text-clay focus:outline-none focus-visible:ring-2 focus-visible:ring-clay" aria-label={`Remover ${item.product.name}`}>Remover</button>
+                    <button type="button" onClick={() => onRemove(item.productId, item.selectedSize)} className="col-span-2 h-fit justify-self-start rounded-full border border-clay px-3 py-2 text-sm font-semibold text-clay focus:outline-none focus-visible:ring-2 focus-visible:ring-clay sm:col-span-1 sm:border-0 sm:px-0 sm:py-0" aria-label={`Remover ${item.product.name}`}>Remover</button>
                   </div>
                   <div className="mt-4 flex items-center justify-between gap-3">
                     <label className="text-sm font-semibold text-ink">Quantidade
@@ -148,7 +148,7 @@ export function CartDrawer({ isOpen, items, subtotal, onClose, onRemove, onUpdat
               </div>
               <button type="button" onClick={onClose} disabled={isCheckingOut !== null} className="w-full rounded-full border border-ink px-6 py-3 text-sm font-bold uppercase tracking-[0.2em] text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-clay">Continuar comprando</button>
             </div>
-          </>
+          </div>
         )}
       </aside>
     </div>
